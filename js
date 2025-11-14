@@ -1,102 +1,90 @@
-// --- DOM ELEMENTS ---
-const gameArea = document.getElementById('game-area');
-const feedbackArea = document.getElementById('feedback-area');
-const startBtn = document.getElementById('start-btn');
-const submitBtn = document.getElementById('submit-btn');
-const answerInput = document.getElementById('answer-input');
+// Initialize variables
+let score = 0;       // Player's score
+let timeLeft = 60;  // Initial time limit
+let timer;          // Timer variable
+let correctAnswer;  // Store the correct answer separately
 
-const scoreEl = document.getElementById('score');
-const timerEl = document.getElementById('timer');
-const questionEl = document.getElementById('question');
-const feedbackEl = document.getElementById('feedback');
-
-// --- GAME STATE ---
-let score;
-let timeLeft;
-let timerInterval;
-let currentCorrectAnswer;
-
-// --- 1. START GAME FUNCTION ---
-function startGame() {
-    // Reset state
-    score = 0;
-    timeLeft = 30;
-    
-    // Update display
-    scoreEl.textContent = score;
-    timerEl.textContent = timeLeft;
-    feedbackEl.textContent = '';
-    
-    // Show the game area, hide the start button
-    gameArea.classList.remove('hidden');
-    feedbackArea.classList.add('hidden'); // Hide the whole feedback/start area
-    
-    generateQuestion();
-    
-    // Start the timer
-    timerInterval = setInterval(updateTimer, 1000);
-}
-
-// --- 2. TIMER FUNCTION ---
-function updateTimer() {
-    timeLeft--;
-    timerEl.textContent = timeLeft;
-    
-    if (timeLeft <= 0) {
-        endGame();
-    }
-}
-
-// --- 3. END GAME FUNCTION ---
-function endGame() {
-    clearInterval(timerInterval); // Stop the timer
-    
-    // Hide the game area, show the feedback/start area
-    gameArea.classList.add('hidden');
-    feedbackArea.classList.remove('hidden');
-    
-    // Show final score
-    feedbackEl.textContent = `Time's up! Your final score is ${score}.`;
-    startBtn.textContent = 'Play Again?'; // Change button text
-}
-
-// --- 4. GENERATE QUESTION ---
+// Function to generate a math question
 function generateQuestion() {
-    answerInput.value = ''; // Clear input
-    
+    // Generate two random numbers
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
-    
-    questionEl.textContent = `What is ${num1} x ${num2}?`;
-    currentCorrectAnswer = num1 * num2;
+    //Choose a random operator (+, -, or *)
+    const operatorIndex = Math.floor(Math.random() * 3);
+
+    // Calculate the correct answer based on the selected operator
+    switch (operatorIndex) {
+        case 0:
+            correctAnswer = num1 + num2;
+            break;
+        case 1:
+            correctAnswer = num1 - num2;
+            break;
+        case 2:
+            correctAnswer = num1 * num2;
+            break;
+    }
+
+    // Create the math expression and display it on the page
+    const operator = ['+', '-', '*'][operatorIndex];
+    const expression = `${num1} ${operator} ${num2}`;
+    document.getElementById("question").textContent = expression;
 }
 
-// --- 5. CHECK ANSWER ---
+// Function to start the timer
+function startTimer() {
+    timer = setInterval(function () {
+        // Decrement the time left, update the displayed time, and check if time is up
+        timeLeft--;
+        document.getElementById("time").textContent = timeLeft;
+        if (timeLeft === 0) {
+            // Stop the timer
+            clearInterval(timer); 
+            document.getElementById("result").textContent = `Time's up! Your final score is ${score}`;
+            // Disable input field
+            document.getElementById("input").disabled = true; 
+            // Disable submit button
+            document.getElementById("submit-button").disabled = true; 
+        }
+    }, 1000); // Update every 1 second
+}
+
+// Function to check the player's answer
 function checkAnswer() {
-    const userAnswer = parseInt(answerInput.value, 10);
-    
-    if (isNaN(userAnswer)) {
-        // We can give feedback, but in a timed game, 
-        // it's often better to just ignore bad input
-        return; 
+    // Get the user's answer from the input field
+    const userAnswer = parseFloat(document.getElementById("input").value);
+
+    // Compare the user's answer to the correct answer
+    if (userAnswer === correctAnswer) {
+        score++; // Increment the score for each correct answer
+        document.getElementById("score").textContent = score; // Update the displayed score
+        document.getElementById("result").style.color = "Green";
+        document.getElementById("result").textContent = "Correct!";
+    } else {
+        document.getElementById("result").style.color = "Red";
+        document.getElementById("result").textContent = `Incorrect. The correct answer is ${correctAnswer}. Try again!`;
     }
 
-    if (userAnswer === currentCorrectAnswer) {
-        score++;
-        scoreEl.textContent = score;
-    }
-    
-    // Generate a new question whether the answer was right or wrong
+    // Clear the input field and generate a new question
+    document.getElementById("input").value = "";
     generateQuestion();
 }
 
-// --- EVENT LISTENERS ---
-startBtn.addEventListener('click', startGame);
-submitBtn.addEventListener('click', checkAnswer);
+// Function to start the game
+function startGame() {
+    // Reset variables and UI elements to start a new game
+    score = 0;
+    timeLeft = 60;
+    document.getElementById("input").disabled = false;
+    document.getElementById("input").textContent = "";
+    document.getElementById("result").textContent = "";
+    document.getElementById("score").textContent = score;
+    document.getElementById("time").textContent = timeLeft;
 
-// Allow pressing "Enter" to submit
-answerInput.addEventListener('keydown', function(event) {
-    if (event.key === 'Enter') {
-        checkAnswer();
-    }
-});
+    // Start the timer, generate the first question, and begin the game
+    startTimer();
+    generateQuestion();
+}
+
+// Start the game when the page loads
+startGame();
