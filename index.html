@@ -3,35 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid Paper Math</title>
-    <link rel="stylesheet" href="style.css">
+    <title>🔢 Math Quiz Game</title>
+    <!-- Link to an external stylesheet for styling -->
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-
-    <div class="game-container">
-        <h1>Grid Paper Math</h1>
-        
-        <div id="game-area" class="hidden">
-            <div class="game-stats">
-                <span>Score: <span id="score">0</span></span>
-                <span>Time: <span id="timer">30</span>s</span>
+    <div class="container">
+        <header>
+            <!-- Game title -->
+            <h1>Math Quiz Game</h1> 
+            <!-- Game description -->
+            <p>Test your math skills within the time limit.</p> 
+        </header>
+        <div id="timer-container">
+            <div id="time-circle">
+                <!-- Displays the timer countdown -->
+                <span id="time">30</span> 
             </div>
-
-            <div id="question-box">
-                <span id="question">What is 5 + 3?</span>
+        </div>
+        <div id="quiz-container">
+            <div id="question-container">
+                <!-- Displays the math question -->
+                <p id="question">5 + 3</p> 
             </div>
-
-            <input type="number" id="answer-input" placeholder="Your answer" autocomplete="off">
-            <button id="submit-btn">Submit</button>
+            <!-- Input field for the answer -->
+            <input type="number" id="input" placeholder="Your Answer"> 
+            <!-- Button to submit the answer -->
+            <button id="submit-button" onclick="checkAnswer()">Submit Answer</button> 
+            <!-- Displays the result of the quiz -->
+            <p id="result"></p> 
         </div>
-
-        <div id="feedback-area">
-            <div id="feedback">Click Start to begin!</div>
-            <button id="start-btn">Start Game</button>
+        <div id="score-container">
+            <!-- Displays the player's score -->
+            <p>Score: <span id="score">0</span></p> 
         </div>
-
+        <!-- Button to start the game -->
+        <button id="start-button" onclick="startGame()">Start Game</button>
     </div>
-
-    <script src="script.js"></script>
+    <!-- Link of an external JavaScript file for functionality -->
+    <script src="script.js"></script> 
 </body>
 </html>
