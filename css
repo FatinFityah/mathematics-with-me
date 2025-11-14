@@ -1,0 +1,96 @@
+/* Basic Setup */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #333;
+    margin: 0;
+}
+
+/* Game Container Styling */
+.game-container {
+    background-color: #ffffff;
+    padding: 25px 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h1 {
+    color: #4a148c;
+    margin-top: 0;
+}
+
+/* Score and Question Box */
+.score-board {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+#score {
+    font-weight: bold;
+}
+
+#question-box {
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#question {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Input and Button */
+#answer-input {
+    width: calc(100% - 22px); /* Account for padding */
+    padding: 12px;
+    font-size: 1em;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box; /* Important for padding */
+    text-align: center;
+}
+
+#submit-btn {
+    background-color: #6a11cb;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    padding: 12px 20px;
+    width: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#submit-btn:hover {
+    background-color: #5a0fbd;
+}
+
+/* Feedback Styling */
+#feedback {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    height: 20px; /* Reserve space to prevent layout shift */
+}
+
+/* Classes to be added by JavaScript */
+.correct {
+    color: #28a745;
+}
+
+.wrong {
+    color: #dc3545;
+}
