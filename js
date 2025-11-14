@@ -1,81 +1,102 @@
-// 1. GET ELEMENTS FROM THE DOM
-const questionEl = document.getElementById('question');
-const answerInput = document.getElementById('answer-input');
+// --- DOM ELEMENTS ---
+const gameArea = document.getElementById('game-area');
+const feedbackArea = document.getElementById('feedback-area');
+const startBtn = document.getElementById('start-btn');
 const submitBtn = document.getElementById('submit-btn');
+const answerInput = document.getElementById('answer-input');
+
 const scoreEl = document.getElementById('score');
+const timerEl = document.getElementById('timer');
+const questionEl = document.getElementById('question');
 const feedbackEl = document.getElementById('feedback');
 
-// 2. STATE VARIABLES
-let score = 0;
+// --- GAME STATE ---
+let score;
+let timeLeft;
+let timerInterval;
 let currentCorrectAnswer;
 
-// 3. GENERATE A NEW QUESTION
-function generateQuestion() {
-    // Clear previous feedback and input
-    feedbackEl.textContent = '';
-    feedbackEl.className = '';
-    answerInput.value = '';
+// --- 1. START GAME FUNCTION ---
+function startGame() {
+    // Reset state
+    score = 0;
+    timeLeft = 30;
     
-    // Generate two random numbers (1-10)
+    // Update display
+    scoreEl.textContent = score;
+    timerEl.textContent = timeLeft;
+    feedbackEl.textContent = '';
+    
+    // Show the game area, hide the start button
+    gameArea.classList.remove('hidden');
+    feedbackArea.classList.add('hidden'); // Hide the whole feedback/start area
+    
+    generateQuestion();
+    
+    // Start the timer
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+// --- 2. TIMER FUNCTION ---
+function updateTimer() {
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    
+    if (timeLeft <= 0) {
+        endGame();
+    }
+}
+
+// --- 3. END GAME FUNCTION ---
+function endGame() {
+    clearInterval(timerInterval); // Stop the timer
+    
+    // Hide the game area, show the feedback/start area
+    gameArea.classList.add('hidden');
+    feedbackArea.classList.remove('hidden');
+    
+    // Show final score
+    feedbackEl.textContent = `Time's up! Your final score is ${score}.`;
+    startBtn.textContent = 'Play Again?'; // Change button text
+}
+
+// --- 4. GENERATE QUESTION ---
+function generateQuestion() {
+    answerInput.value = ''; // Clear input
+    
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 10) + 1;
     
-    // Randomly pick an operation: 0 = addition, 1 = multiplication
-    const operationType = Math.floor(Math.random() * 2);
-
-    if (operationType === 0) {
-        // Addition
-        questionEl.textContent = `What is ${num1} + ${num2}?`;
-        currentCorrectAnswer = num1 + num2;
-    } else {
-        // Multiplication
-        questionEl.textContent = `What is ${num1} x ${num2}?`;
-        currentCorrectAnswer = num1 * num2;
-    }
+    questionEl.textContent = `What is ${num1} x ${num2}?`;
+    currentCorrectAnswer = num1 * num2;
 }
 
-// 4. CHECK THE USER'S ANSWER
+// --- 5. CHECK ANSWER ---
 function checkAnswer() {
-    // Get the user's answer from the input box
     const userAnswer = parseInt(answerInput.value, 10);
-
-    // Check if the answer is valid (not empty)
+    
     if (isNaN(userAnswer)) {
-        feedbackEl.textContent = 'Please enter a number!';
-        feedbackEl.className = 'wrong';
-        return; // Stop the function here
+        // We can give feedback, but in a timed game, 
+        // it's often better to just ignore bad input
+        return; 
     }
 
-    // Check if the answer is correct
     if (userAnswer === currentCorrectAnswer) {
-        // Feedback for correct answer
-        feedbackEl.textContent = 'Correct!';
-        feedbackEl.className = 'correct';
-        
-        // Update score
         score++;
         scoreEl.textContent = score;
-    } else {
-        // Feedback for wrong answer
-        feedbackEl.textContent = `Wrong! The correct answer was ${currentCorrectAnswer}.`;
-        feedbackEl.className = 'wrong';
     }
-
-    // Generate a new question after a short delay
-    setTimeout(generateQuestion, 1200);
+    
+    // Generate a new question whether the answer was right or wrong
+    generateQuestion();
 }
 
-// 5. EVENT LISTENERS
-// Run checkAnswer when the button is clicked
+// --- EVENT LISTENERS ---
+startBtn.addEventListener('click', startGame);
 submitBtn.addEventListener('click', checkAnswer);
 
-// Allow user to press "Enter" key to submit
+// Allow pressing "Enter" to submit
 answerInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         checkAnswer();
     }
 });
-
-// 6. INITIALIZE GAME
-// Show the first question when the page loads
-generateQuestion();
